@@ -10,6 +10,7 @@ const PASSWORD = process.env.UNTIS_PASSWORD;
 const TABLE_ID = process.env.UNTIS_TABLEID;
 const SCHOOL_LOGIN_URL = process.env.SCHOOL_LOGIN_URL;
 const WEBHOOK = process.env.WEBHOOK;
+const CTIMES = JSON.parse(process.env.CTIMES);
 
 if (!USERNAME) {
 	console.error("No username");
@@ -35,6 +36,34 @@ if (!WEBHOOK) {
 	console.error("No webhook");
 	process.exit();
 }
+
+if (!CTIMES || CTIMES.length == 0) {
+	console.error("No times");
+	process.exit();
+}
+
+let times = new Map();
+
+CTIMES.forEach((time) => {
+	times.set(time, false);
+});
+
+setInterval(() => {
+	const date = new Date();
+
+	times.forEach((value, key) => {
+		const split = key.split(":");
+		if (date.getHours() != split[0] || date.getMinutes() != split[1]) {
+			times.set(key, false);
+			return;
+		}
+
+		if (value) return;
+
+		times.set(key, true);
+		sendSubstitutionPlan();
+	});
+}, 1000);
 
 async function sendSubstitutionPlan() {
 	const browser = await puppeteer.launch();
@@ -65,7 +94,15 @@ async function sendSubstitutionPlan() {
 				return;
 			}
 
+			console.log("failure");
 			res.json().then(console.log);
+			fetch(WEBHOOK, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					content: "Failed to send substitution plan",
+				}),
+			});
 		});
 	}, 5000);
 }
