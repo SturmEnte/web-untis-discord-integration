@@ -1,0 +1,18 @@
+{
+  "name": "web-untis-discord-integration",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "nodemon src/main.js"
+  },
+  "author": "SturmEnte",
+  "license": "GPL-3.0-only",
+  "dependencies": {
+    "axios": "^1.5.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
