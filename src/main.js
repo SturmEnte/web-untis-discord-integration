@@ -39,7 +39,7 @@ if (!WEBHOOK) {
 
 	await page.goto(SCHOOL_LOGIN_URL);
 
-	await page.setViewport({ width: 2200, height: 800 });
+	//await page.setViewport({ width: 2200, height: 800 });
 
 	await page.screenshot({ path: "./test/test1.png" });
 
@@ -52,7 +52,7 @@ if (!WEBHOOK) {
 	setTimeout(async () => {
 		await page.goto(`https://borys.webuntis.com/WebUntis/api/public/printpreview/timetable?type=1&id=${TABLE_ID}&date=${date.yyyymmdd()}&formatId=1`);
 
-		await page.screenshot({ path: "./test/test3.png" });
+		await page.screenshot({ path: "./test/test3.png", captureBeyondViewport: true, fullPage: true });
 	}, 5000);
 })();
 
